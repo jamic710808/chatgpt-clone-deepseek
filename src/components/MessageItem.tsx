@@ -1,4 +1,4 @@
-import { User, Bot, Brain, Sparkles, Flame } from 'lucide-react'
+import { User, Brain, Sparkles, Flame } from 'lucide-react'
 import type { Message } from '../types'
 import { ThinkingBlock } from './ThinkingBlock'
 import { MarkdownContent } from './MarkdownContent'

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { MessageSquareText, Brain, Sparkles, Rocket, Code, Lightbulb, PenTool, Flame } from 'lucide-react'
+import { Brain, Sparkles, Rocket, Code, Lightbulb, PenTool, Flame } from 'lucide-react'
 import { useChatStore } from '../store/chatStore'
 import { MessageItem } from './MessageItem'
 
@@ -33,7 +33,7 @@ export function MessageList() {
           <h1 className="text-4xl font-bold mb-3">
             <span className="text-gradient">DeepSeek Chat</span>
           </h1>
-          
+
           <p className="text-stone-400 mb-10 text-lg">
             {thinkingEnabled ? (
               <>
@@ -52,25 +52,25 @@ export function MessageList() {
 
           {/* Quick prompts */}
           <div className="grid grid-cols-2 gap-4">
-            <QuickPrompt 
+            <QuickPrompt
               icon={<Lightbulb className="w-5 h-5" />}
               title="解釋概念"
               description="讓我解釋量子計算的基本原理"
               color="from-yellow-500 to-orange-500"
             />
-            <QuickPrompt 
+            <QuickPrompt
               icon={<PenTool className="w-5 h-5" />}
               title="寫作助手"
               description="幫我寫一封商務郵件"
               color="from-rose-500 to-red-500"
             />
-            <QuickPrompt 
+            <QuickPrompt
               icon={<Code className="w-5 h-5" />}
               title="程式碼協助"
               description="用 Python 實作快速排序"
               color="from-orange-500 to-amber-500"
             />
-            <QuickPrompt 
+            <QuickPrompt
               icon={<Rocket className="w-5 h-5" />}
               title={thinkingEnabled ? "數學推理" : "快速問答"}
               description={thinkingEnabled ? "9.11和9.8哪個更大？" : "解答各種問題"}
@@ -92,12 +92,12 @@ export function MessageList() {
   )
 }
 
-function QuickPrompt({ 
-  icon, 
-  title, 
-  description, 
-  color 
-}: { 
+function QuickPrompt({
+  icon,
+  title,
+  description,
+  color
+}: {
   icon: React.ReactNode
   title: string
   description: string
