@@ -15,6 +15,13 @@ elif raw_url.startswith("postgresql://"):
     if not raw_url.startswith("postgresql+asyncpg://"):
         raw_url = raw_url.replace("postgresql://", "postgresql+asyncpg://", 1)
 
+# asyncpg does not support sslmode parameter in URL
+if "?sslmode=" in raw_url:
+    raw_url = raw_url.split("?sslmode=")[0]
+elif "&sslmode=" in raw_url:
+    raw_url = raw_url.replace("&sslmode=require", "").replace("&sslmode=prefer", "")
+
+
 # 若沒有環境變數，就 fallback 回本地 SQLite 開發
 DATABASE_URL = raw_url or "sqlite+aiosqlite:///./chat.db"
 
