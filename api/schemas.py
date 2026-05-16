@@ -49,6 +49,9 @@ class ChatRequest(BaseModel):
     conversation_id: Optional[str] = None
     thinking_enabled: Optional[bool] = False
     api_key: Optional[str] = None  # 動態 API Key
+    provider: Optional[str] = "deepseek"
+    model: Optional[str] = "deepseek-chat"
+    base_url: Optional[str] = None
 
 
 class StreamChunk(BaseModel):

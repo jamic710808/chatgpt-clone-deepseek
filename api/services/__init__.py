@@ -1,3 +1,3 @@
-from .deepseek_service import DeepSeekService
+from .llm_service import llm_service
 
-__all__ = ["DeepSeekService"]
+__all__ = ["llm_service"]

@@ -25,6 +25,7 @@ dist-ssr/
 .env.production.local
 
 # Project specific
+chat.db
 api/chat.db
 api/__pycache__/
 __pycache__/

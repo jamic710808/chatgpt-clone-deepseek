@@ -1,21 +1,42 @@
-import { Brain, Zap, Flame } from 'lucide-react'
+import { Brain, Zap, Flame, Cpu } from 'lucide-react'
 import { useChatStore } from '../store/chatStore'
 
-export function ModelSelector() {
-  const { thinkingEnabled, setThinkingEnabled, isStreaming } = useChatStore()
+const PROVIDERS: Record<string, string> = {
+  openai: 'OpenAI',
+  anthropic: 'Anthropic',
+  deepseek: 'DeepSeek',
+  siliconflow: 'SiliconFlow',
+  minimax: 'Minimax',
+  openrouter: 'OpenRouter',
+  ollama: 'Ollama',
+  custom: '自訂端點',
+}
+
+export function ModelSelector({ onOpenSettings }: { onOpenSettings?: () => void }) {
+  const { thinkingEnabled, setThinkingEnabled, isStreaming, provider, model } = useChatStore()
+  
+  const providerName = PROVIDERS[provider] || provider || 'Unknown'
 
   return (
     <div className="flex items-center gap-4">
-      {/* Model name */}
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center glow-orange">
-          <Flame className="w-5 h-5 text-white animate-flame" />
+      {/* Model name (Clickable for quick switch) */}
+      <button 
+        onClick={onOpenSettings}
+        className="flex items-center gap-3 p-1.5 -ml-1.5 rounded-xl hover:bg-stone-800/50 transition-colors text-left"
+        title="切換供應商與模型"
+      >
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center shadow-[0_0_15px_rgba(168,85,247,0.4)]">
+          <Cpu className="w-5 h-5 text-white" />
         </div>
         <div>
-          <h1 className="text-lg font-bold text-gradient">DeepSeek Chat</h1>
-          <p className="text-xs text-stone-400">deepseek-chat</p>
+          <h1 className="text-lg font-bold bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent flex items-center gap-2">
+            {providerName}
+          </h1>
+          <p className="text-xs text-stone-400 truncate max-w-[150px] leading-tight" title={model}>
+            {model || '未選擇模型'}
+          </p>
         </div>
-      </div>
+      </button>
 
       {/* Thinking mode toggle */}
       <div className="h-8 w-px bg-stone-700/50 mx-2" />

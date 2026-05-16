@@ -31,7 +31,7 @@ export function MessageList() {
           </div>
 
           <h1 className="text-4xl font-bold mb-3">
-            <span className="text-gradient">DeepSeek Chat</span>
+            <span className="text-gradient">KenGpt Chat</span>
           </h1>
 
           <p className="text-stone-400 mb-10 text-lg">

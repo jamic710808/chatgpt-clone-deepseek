@@ -10,13 +10,21 @@ interface ChatStore extends ChatState {
   // Abort controller
   abortController: AbortController | null
 
-  // API Key
+  // Provider Config
+  provider: string
+  model: string
+  baseUrl: string | null
+  apiKeys: Record<string, string>
+
+  // API Key (deprecated, mapped to current provider's key)
   apiKey: string | null
 
   // Actions
   setSidebarOpen: (open: boolean) => void
   setThinkingEnabled: (enabled: boolean) => void
-  setApiKey: (key: string | null) => void
+  setApiKey: (key: string | null) => void // 保留為了相容性，或作為當前 provider 的 key 更新
+  setProviderConfig: (config: { provider?: string; model?: string; baseUrl?: string | null }) => void
+  setProviderApiKey: (provider: string, key: string) => void
 
   // Conversation actions
   loadConversations: () => Promise<void>
@@ -53,7 +61,11 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   streamingContent: '',
   sidebarOpen: true,
   abortController: null,
-  apiKey: localStorage.getItem('apiKey'), // 從 localStorage 讀取
+  provider: localStorage.getItem('chatProvider') || 'deepseek',
+  model: localStorage.getItem('chatModel') || 'deepseek-chat',
+  baseUrl: localStorage.getItem('chatBaseUrl') || null,
+  apiKeys: JSON.parse(localStorage.getItem('chatApiKeys') || '{}'),
+  apiKey: localStorage.getItem('apiKey'), // 從 localStorage 讀取 (deprecated)
 
   // UI actions
   setSidebarOpen: (open) => set({ sidebarOpen: open }),
@@ -61,12 +73,43 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   setThinkingEnabled: (enabled) => set({ thinkingEnabled: enabled }),
 
   setApiKey: (key) => {
+    const { provider, apiKeys } = get()
     if (key) {
       localStorage.setItem('apiKey', key)
+      const newApiKeys = { ...apiKeys, [provider]: key }
+      localStorage.setItem('chatApiKeys', JSON.stringify(newApiKeys))
+      set({ apiKey: key, apiKeys: newApiKeys })
     } else {
       localStorage.removeItem('apiKey')
+      const newApiKeys = { ...apiKeys }
+      delete newApiKeys[provider]
+      localStorage.setItem('chatApiKeys', JSON.stringify(newApiKeys))
+      set({ apiKey: null, apiKeys: newApiKeys })
     }
-    set({ apiKey: key })
+  },
+
+  setProviderConfig: (config) => {
+    if (config.provider !== undefined) localStorage.setItem('chatProvider', config.provider)
+    if (config.model !== undefined) localStorage.setItem('chatModel', config.model)
+    if (config.baseUrl !== undefined) {
+      if (config.baseUrl) localStorage.setItem('chatBaseUrl', config.baseUrl)
+      else localStorage.removeItem('chatBaseUrl')
+    }
+    set(config)
+  },
+
+  setProviderApiKey: (provider, key) => {
+    const { apiKeys, provider: currentProvider } = get()
+    const newApiKeys = { ...apiKeys, [provider]: key }
+    localStorage.setItem('chatApiKeys', JSON.stringify(newApiKeys))
+    
+    // 如果更新的是當前選擇的 provider，同步更新舊版 apiKey 欄位
+    if (provider === currentProvider) {
+      localStorage.setItem('apiKey', key)
+      set({ apiKeys: newApiKeys, apiKey: key })
+    } else {
+      set({ apiKeys: newApiKeys })
+    }
   },
 
   // Abort controller

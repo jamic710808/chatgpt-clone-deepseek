@@ -8,7 +8,7 @@ from typing import AsyncGenerator
 from api.database import get_db
 from api.schemas import ChatRequest
 from api.models import Conversation, Message
-from api.services.deepseek_service import deepseek_service
+from api.services.llm_service import llm_service
 
 router = APIRouter(prefix="/api", tags=["chat"])
 
@@ -19,11 +19,11 @@ async def generate_sse_stream(
 ) -> AsyncGenerator[str, None]:
     """生成 SSE 流式響應"""
 
-    # 檢查 API Key
-    if not request.api_key:
-        yield '{"type": "error", "error": "請先在設定中輸入 API Key"}\n\n'
-        return
-
+    # 檢查 API Key (如果是 ollama 或 custom 可能不一定要，留給 llm_service 判斷，但為了向下兼容，我們可以在那邊檢查，或者在這裡放寬)
+    if not request.api_key and request.provider not in ["ollama", "custom"]:
+        # 嘗試讓 llm_service 自己處理，如果還是沒有 key 會有例外，但為了前端 UX 可以先驗證
+        pass
+        
     conversation_id = request.conversation_id
     
     # 如果有 conversation_id，獲取歷史訊息
@@ -34,17 +34,20 @@ async def generate_sse_stream(
             conversation.thinking_enabled = "true" if request.thinking_enabled else "false"
             await db.commit()
     
-    # 準備傳送給 DeepSeek 的訊息
+    # 準備傳送給 LLM 的訊息
     api_messages = [{"role": m.role, "content": m.content} for m in request.messages]
     
     full_reasoning = ""
     full_content = ""
     
-    # 流式調用 DeepSeek API（傳遞動態 API Key）
-    async for chunk in deepseek_service.stream_chat(
+    # 流式調用統一 LLM API
+    async for chunk in llm_service.stream_chat(
         messages=api_messages,
+        provider=request.provider,
+        model=request.model,
         thinking_enabled=request.thinking_enabled,
-        api_key=request.api_key
+        api_key=request.api_key,
+        base_url=request.base_url
     ):
         if chunk["type"] == "reasoning":
             full_reasoning += chunk["data"]

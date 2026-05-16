@@ -55,7 +55,7 @@ export function Sidebar() {
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center">
               <Flame className="w-4 h-4 text-white" />
             </div>
-            <span className="font-bold text-gradient">DeepSeek</span>
+            <span className="font-bold text-gradient">KenGpt</span>
           </div>
           <button
             onClick={() => setSidebarOpen(false)}
@@ -142,7 +142,7 @@ export function Sidebar() {
           </div>
         )}
         <div className="text-xs text-stone-600 text-center">
-          Powered by DeepSeek API
+          Powered by KenGpt API
         </div>
       </div>
     </div>

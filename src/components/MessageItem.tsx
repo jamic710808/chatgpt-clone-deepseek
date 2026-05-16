@@ -49,7 +49,7 @@ export function MessageItem({ message }: MessageItemProps) {
               <span className="text-amber-400">你</span>
             ) : (
               <>
-                <span className="text-gradient">DeepSeek</span>
+                <span className="text-gradient">KenGpt</span>
                 {hasReasoning && (
                   <span className="text-xs bg-orange-500/20 text-orange-300 px-2 py-1 rounded-full border border-orange-500/20">
                     🧠 推理模式

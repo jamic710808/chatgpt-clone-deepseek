@@ -17,7 +17,8 @@ export function ChatLayout() {
     messages,
     currentConversationId,
     thinkingEnabled,
-    apiKey,
+    provider,
+    apiKeys,
     addUserMessage,
     startAssistantMessage,
     appendReasoning,
@@ -32,8 +33,9 @@ export function ChatLayout() {
   const { toasts, removeToast, error: showError } = useToast()
 
   const handleSendMessage = useCallback(async (content: string) => {
+    const currentApiKey = apiKeys[provider]
     // 檢查 API Key
-    if (!apiKey) {
+    if (!currentApiKey) {
       showError('請先設定 API Key')
       setSettingsOpen(true)
       return
@@ -67,6 +69,9 @@ export function ChatLayout() {
         messages: apiMessages,
         conversation_id: conversationId,
         thinking_enabled: thinkingEnabled,
+        provider: useChatStore.getState().provider,
+        model: useChatStore.getState().model,
+        base_url: useChatStore.getState().baseUrl,
       },
       (chunk) => appendReasoning(chunk),
       (chunk) => appendContent(chunk),
@@ -80,10 +85,10 @@ export function ChatLayout() {
         finishStreaming(null, '')
       },
       controller.signal,
-      apiKey
+      currentApiKey
     )
   }, [
-    currentConversationId, messages, thinkingEnabled, apiKey,
+    currentConversationId, messages, thinkingEnabled, provider, apiKeys,
     addUserMessage, startAssistantMessage, appendReasoning,
     appendContent, finishStreaming, createNewConversation,
     loadConversations, setAbortController, showError
@@ -130,7 +135,7 @@ export function ChatLayout() {
 
             {/* Model Selector */}
             <div className="flex-1 flex justify-center">
-              <ModelSelector />
+              <ModelSelector onOpenSettings={() => setSettingsOpen(true)} />
             </div>
 
             {/* Spacer to balance layout */}

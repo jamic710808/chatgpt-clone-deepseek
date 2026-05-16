@@ -69,4 +69,7 @@ export interface ChatRequest {
   conversation_id?: string | null
   thinking_enabled: boolean
   api_key?: string | null
+  provider?: string
+  model?: string
+  base_url?: string | null
 }

@@ -31,7 +31,7 @@ export function HealthCheck() {
     <div className="min-h-screen bg-chat-bg flex items-center justify-center p-4">
       <div className="bg-chat-sidebar rounded-2xl shadow-2xl p-8 max-w-md w-full border border-chat-border">
         <h1 className="text-2xl font-bold text-white mb-2 text-center">
-          DeepSeek Chat
+          KenGpt Chat
         </h1>
         <p className="text-gray-400 text-center mb-8">
           系統健康檢查

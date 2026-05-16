@@ -27,8 +27,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="DeepSeek Chat API",
-    description="A ChatGPT-like chat system powered by DeepSeek",
+    title="KenGpt Chat API",
+    description="A ChatGPT-like chat system powered by KenGpt",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -49,7 +49,7 @@ app.include_router(conversations_router)
 
 @app.get("/")
 async def root():
-    return {"message": "DeepSeek Chat API", "docs": "/docs"}
+    return {"message": "KenGpt Chat API", "docs": "/docs"}
 
 
 @app.get("/api/health")
@@ -59,7 +59,7 @@ async def health_check():
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
         "version": "1.0.0",
-        "service": "DeepSeek Chat API"
+        "service": "KenGpt Chat API"
     }
 
 
@@ -70,14 +70,14 @@ async def get_models():
         "models": [
             {
                 "id": "deepseek-chat",
-                "name": "DeepSeek V3",
+                "name": "KenGpt V3",
                 "description": "快速對話模型，適合日常交流",
                 "type": "chat",
                 "thinking_enabled": False
             },
             {
                 "id": "deepseek-reasoner",
-                "name": "DeepSeek R1",
+                "name": "KenGpt R1",
                 "description": "推理模型，展示思考過程",
                 "type": "reasoning",
                 "thinking_enabled": True
