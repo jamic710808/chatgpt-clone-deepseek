@@ -1,4 +1,4 @@
-import { Brain, Zap, Flame, Cpu } from 'lucide-react'
+import { Brain, Zap, Cpu } from 'lucide-react'
 import { useChatStore } from '../store/chatStore'
 
 const PROVIDERS: Record<string, string> = {
